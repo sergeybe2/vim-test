@@ -42,6 +42,33 @@ describe "DjangoTest"
     Expect g:test#last_command == 'python manage.py test module.test_method'
   end
 
+  it "runs class tests"
+    view +2 module/test_class.py
+    TestClass
+
+    Expect g:test#last_command == 'python manage.py test module.test_class.TestNumbers'
+
+    view +5 module/test_class.py
+    TestClass
+
+    Expect g:test#last_command == 'python manage.py test module.test_class.TestSubclass'
+
+    view +6 module/test_class.py
+    TestClass
+
+    Expect g:test#last_command == 'python manage.py test module.test_class.TestSubclass'
+
+    view +16 module/test_class.py
+    TestClass
+
+    Expect g:test#last_command == 'python manage.py test module.test_class.TestNestedClass'
+
+    view +1 module/test_method.py
+    TestClass
+
+    Expect g:test#last_command == 'python manage.py test module.test_method'
+  end
+
   it "runs file tests"
     view module/test_class.py
     TestFile

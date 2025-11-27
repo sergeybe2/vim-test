@@ -21,6 +21,13 @@ function! test#python#djangotest#build_position(type, position) abort
     else
       return [path]
     endif
+  elseif a:type ==# 'class'
+    let name = s:nearest_class(a:position)
+    if !empty(name)
+      return [path . s:separator() . name]
+    else
+      return [path]
+    endif
   elseif a:type ==# 'file'
     return [path]
   else
@@ -77,6 +84,21 @@ endfunc
 function! s:nearest_test(position) abort
   let name = test#base#nearest_test(a:position, g:test#python#patterns)
   return join(name['namespace'] + name['test'], '.')
+endfunction
+
+function! s:nearest_class(position) abort
+  let name = test#base#nearest_test(a:position, g:test#python#patterns)
+  let namespace_str = join(name['namespace'], '.')
+  let test_id = []
+
+  if !empty(name['namespace'])
+      let test_id = test_id + [namespace_str]
+  endif
+
+  " ex:
+  "   path.to.file.TestClass
+  let dtest_str = join(test_id, '.')
+  return dtest_str
 endfunction
 
 function! s:separator() abort
